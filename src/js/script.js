@@ -60,8 +60,8 @@
       thisProduct.data = data;
 
       thisProduct.renderInMenu();
+      thisProduct.initAccordion();
 
-      console.log('new Product:', thisProduct);
     }
 
     renderInMenu() {
@@ -85,13 +85,36 @@
 
 
     }
+
+    initAccordion() {
+      const thisProduct = this;
+
+      const clickedElement = thisProduct.element.querySelector(select.menuProduct.clickable);
+
+
+
+      clickedElement.addEventListener('click', function (event) {
+        event.preventDefault();
+        thisProduct.element.classList.toggle('active');
+
+        const activeProducts = document.querySelectorAll('.product.active');
+
+        for (let activeProduct of activeProducts) {
+          if (activeProduct !== thisProduct.element)
+            activeProduct.classList.remove('active');
+        }
+
+      });
+
+
+
+    }
   }
 
   const app = {
     initMenu: function () {
       const thisApp = this;
-      
-      console.log('thisApp.data:', thisApp.data);
+
 
       for (let productData in thisApp.data.products) {
         new Product(productData, thisApp.data.products[productData]);
@@ -106,11 +129,6 @@
 
     init: function () {
       const thisApp = this;
-      console.log('*** App starting ***');
-      console.log('thisApp:', thisApp);
-      console.log('classNames:', classNames);
-      console.log('settings:', settings);
-      console.log('templates:', templates);
 
       thisApp.initData();
       thisApp.initMenu();
