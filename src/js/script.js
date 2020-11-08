@@ -33,20 +33,6 @@
     },
   };
 
-  const classNames = {
-    menuProduct: {
-      wrapperActive: 'active',
-      imageVisible: 'active',
-    },
-  };
-
-  const settings = {
-    amountWidget: {
-      defaultValue: 1,
-      defaultMin: 1,
-      defaultMax: 9,
-    }
-  };
 
   const templates = {
     menuProduct: Handlebars.compile(document.querySelector(select.templateOf.menuProduct).innerHTML),
@@ -60,38 +46,41 @@
       thisProduct.data = data;
 
       thisProduct.renderInMenu();
+      thisProduct.getElements();
       thisProduct.initAccordion();
+      thisProduct.initOrderForm();
+      thisProduct.processOrder();
 
     }
 
     renderInMenu() {
       const thisProduct = this;
 
-      /* generate HTML based on template */
-
       const generatedHTML = templates.menuProduct(thisProduct.data);
-
-      /* create element using utils.createElementFromHTML */
 
       thisProduct.element = utils.createDOMFromHTML(generatedHTML);
 
-      /* find menu container */
-
       const menuContainer = document.querySelector(select.containerOf.menu);
-
-      /* add element to menu */
 
       menuContainer.appendChild(thisProduct.element);
 
+    }
+
+    getElements() {
+      const thisProduct = this;
+
+      thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
+      thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
+      thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
+      thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
+      thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
 
     }
 
     initAccordion() {
       const thisProduct = this;
 
-      const clickedElement = thisProduct.element.querySelector(select.menuProduct.clickable);
-
-
+      const clickedElement = thisProduct.accordionTrigger;
 
       clickedElement.addEventListener('click', function (event) {
         event.preventDefault();
@@ -106,7 +95,34 @@
 
       });
 
+    }
 
+    initOrderForm() {
+      const thisProduct = this;
+
+      thisProduct.form.addEventListener('submit', function(event){
+        event.preventDefault();
+        thisProduct.processOrder();
+      });
+      
+      for(let input of thisProduct.formInputs){
+        input.addEventListener('change', function(){
+          thisProduct.processOrder();
+        });
+      }
+      
+      thisProduct.cartButton.addEventListener('click', function(event){
+        event.preventDefault();
+        thisProduct.processOrder();
+      });
+
+      console.log(this.initOrderForm);
+    }
+
+    processOrder() {
+      const thisProduct = this;
+
+      console.log(thisProduct.processOrder);
 
     }
   }
